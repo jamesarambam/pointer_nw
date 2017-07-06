@@ -8,6 +8,8 @@ import tsp_data as tsp
 import sort_data as sort
 import numpy as np
 
+
+# ------------------------------------------------------------------------- #
 def scheduler(epoch):
     return learning_rate
     if epoch < nb_epochs/4:
@@ -18,20 +20,35 @@ def scheduler(epoch):
 
 print("preparing dataset...")
 
-seq_len = 5
+seq_len = 3
+BATCH_SIZE = 1
+TSP = False
 
-t = tsp.Tsp()
-# t = sort.DataGenerator()
 
-X, Y = t.next_batch(3, seq_len)
+if TSP:
+    t = tsp.Tsp()
+    X, Y = t.next_batch(BATCH_SIZE, seq_len)
+    x_test, y_test = t.next_batch(2)
 
+else:
+    t = sort.DataGenerator()
+    X, Y, T = t.next_batch(BATCH_SIZE, seq_len)
+    #x_test, y_test, target_test = t.next_batch(2)
+
+
+
+# t = tsp.Tsp()
+# X, Y = t.next_batch(BATCH_SIZE, seq_len)
 # print X
-# print "-----"
 # print Y
+# print "------------------------------------"
+# t = sort.DataGenerator()
+# X, Y, T = t.next_batch(BATCH_SIZE, seq_len)
+# print X
+# print Y
+# print T
 # exit()
 
-#X, Y = t.overfit(10000)
-x_test, y_test = t.next_batch(2)
 
 YY = []
 for y in Y:
@@ -43,17 +60,25 @@ nb_epochs =  10
 learning_rate = 0.3
 
 print("building model...")
-main_input = Input(shape=(seq_len, 2), name='main_input')
+main_input = Input(shape=(seq_len, 1), name='main_input')
 encoder = LSTM(output_dim = hidden_size, return_sequences = True, name="encoder")(main_input)
 decoder = PointerLSTM(hidden_size, output_dim=hidden_size, name="decoder")(encoder)
+
 model = Model(inputs=main_input, outputs=decoder)
+
+
 model.compile(optimizer='adadelta',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 
-model.fit(X, YY, nb_epoch=nb_epochs, batch_size=64,callbacks=[LearningRateScheduler(scheduler),])
+
+# model.fit(X, YY, nb_epoch=nb_epochs, batch_size=64,callbacks=[LearningRateScheduler(scheduler),])
+model.fit(X, T, nb_epoch=nb_epochs, batch_size=64,callbacks=[LearningRateScheduler(scheduler),])
 #print(model.predict(x_test))
+
+
+
 predictions = model.predict(X)
 
 # print (predictions)
