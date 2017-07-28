@@ -3,8 +3,8 @@
 Author : James Arambam
 Date   : 27 Jul 2017
 Description :
-Input : 
-Output : 
+Input :
+Output :
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 """
 
@@ -45,23 +45,36 @@ ppath = os.getcwd() + "/"  # Project Path Location
 # -------------------------------------------------------------- #
 
 def main():
+
+
     acc = genfromtxt('results/acc.csv', delimiter=',')
     loss = genfromtxt('results/loss.csv', delimiter=',')
+
+    dataSize = len(acc)
+
+    dataSize = dataSize-0
+
 
 
     X = []
     Y_acc = []
     Y_loss = []
-    for i in range(1, 1001):
+    for i in range(1, dataSize):
         X.append(acc[i][1])
         Y_acc.append(acc[i][2])
         Y_loss.append(loss[i][2])
 
     plt.subplot(211)
-    plt.plot(Y_acc, label="Accuracy")
+    plt.subplots_adjust(left=0.08, right=0.99, top=0.95, bottom=0.09, wspace= 0.2, hspace = 0.9)
+    plt.xlabel("Epoch")
+    plt.ylabel("Accuracy")
+    plt.plot(Y_acc)
     plt.legend()
     plt.subplot(212)
-    plt.plot(Y_loss, label="Loss")
+    plt.subplots_adjust(left=0.08, right=0.99, top=0.95, bottom=0.09, wspace= 0.2, hspace = 0.9)
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.plot(Y_loss)
     plt.legend()
     plt.show()
 

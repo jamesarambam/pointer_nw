@@ -32,14 +32,20 @@ import auxlib.auxLib as ax
 from keras import initializers
 from keras.layers.recurrent import _time_distributed_dense
 from keras.activations import tanh, softmax
-from keras.layers import LSTM
 from keras.engine import InputSpec
 from parameters import LEARNING_RATE, NB_EPOCH, BATCH_SIZE, TEST_BATCH
 import keras.backend as K
+from keras.models import Model
+from keras.layers import LSTM, Input
 import numpy as np
+from parameters import DATA_SIZE,BATCH_SIZE, SEQ_LENGTH, HIDDEN_SIZE, NB_EPOCH, TEST_BATCH
+
+
 # --------------------- Variables ------------------------------ #
 ppath = os.getcwd() + "/"  # Project Path Location
 # -------------------------------------------------------------- #
+
+
 
 class pointerLayer(LSTM):
     def __init__(self, hidden_shape, *args, **kwargs):
@@ -107,4 +113,19 @@ def predict(X_test, Y_test, model):
     predictions = model.predict(X_test)
     pred_index = np.array([np.argmax(predictions[i],0) for i in xrange(len(predictions))])
     for i in range(TEST_BATCH):
-        print map(lambda v : round(v[0], 4), [list(Y_test[i][j]) for j in range(len(Y_test[i]))]), map(lambda v : round(v[0], 4), [list(Y_test[i][j]) for j in range(len(Y_test[i]))]), pred_index[i]
+        x = map(lambda t : t[0], [j for j in X_test[i]])
+        y = map(lambda t : t[0], [j for j in Y_test[i]])
+        tmp_x = {k: v for v, k in enumerate(x)}
+        y_test =  map(lambda t : tmp_x[t], y)
+        x_test = map(lambda t : round(t, 4), x)
+        pred = pred_index[i].tolist()
+        print x_test, y_test, pred, y_test == pred
+
+
+    # print "\n\n\n"
+    # print "--------------------------- Prediction --------------------------- "
+    # print "[X_test]", "[Y_test]", "[Y_Prediction]"
+    # predictions = model.predict(X_test)
+    # pred_index = np.array([np.argmax(predictions[i],0) for i in xrange(len(predictions))])
+    # for i in range(TEST_BATCH):
+    #     print map(lambda v : round(v[0], 4), [list(X_test[i][j]) for j in range(len(Y_test[i]))]), map(lambda v : round(v[0], 4), [list(Y_test[i][j]) for j in range(len(Y_test[i]))]), pred_index[i]

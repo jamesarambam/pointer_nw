@@ -3,8 +3,8 @@
 Author : James Arambam
 Date   : 06 Jul 2017
 Description :
-Input : 
-Output : 
+Input :
+Output :
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 """
 
@@ -33,9 +33,10 @@ import auxlib.auxLib as ax
 
 # ============================================================================ #
 LEARNING_RATE = 0.3
-SEQ_LENGTH = 3
+SEQ_LENGTH = 10
+DATA_SIZE = 10000
 BATCH_SIZE = 100
 HIDDEN_SIZE = 128
-NB_EPOCH =  10
-TEST_BATCH = 3
+NB_EPOCH =  1000
+TEST_BATCH = 10
 # ============================================================================ #
