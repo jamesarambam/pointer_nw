@@ -28,6 +28,7 @@ import auxlib.auxLib as ax
 # ================================ priImports ================================ #
 from keras.models import Model
 from keras.layers import LSTM, Input
+from keras import callbacks
 from keras.callbacks import LearningRateScheduler
 from keras.utils.np_utils import to_categorical
 from pointerLayer import pointerLayer, scheduler, predict
@@ -55,8 +56,10 @@ def main():
     model = Model(inputs = main_input, outputs = decoder)
     model.compile(optimizer = 'adadelta', loss = 'categorical_crossentropy', metrics = ['accuracy'])
 
+    tbCallBack = callbacks.TensorBoard(log_dir='./tboard', histogram_freq=0, write_graph=False, write_images=False)
+
     # ---------- TRAIN ------------ #
-    model.fit(X, T, nb_epoch = NB_EPOCH, batch_size = BATCH_SIZE, callbacks = [LearningRateScheduler(scheduler),])
+    model.fit(X, T, nb_epoch = NB_EPOCH, batch_size = BATCH_SIZE, callbacks = [tbCallBack, LearningRateScheduler(scheduler),])
 
     # --------- INFERENCE ---------- #
     predict(X_test, Y_test, model)
